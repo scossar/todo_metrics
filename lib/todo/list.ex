@@ -1,15 +1,15 @@
-defmodule TodoSupervised.List do
+defmodule Todo.List do
   defstruct next_id: 1, entries: %{}
 
   def new(entries \\ []) do
     Enum.reduce(
       entries,
-      %TodoSupervised.List{},
+      %Todo.List{},
       &add_entry(&2, &1)
     )
   end
 
-  def add_entry(%TodoSupervised.List{} = todo_list, entry) do
+  def add_entry(%Todo.List{} = todo_list, entry) do
     entry = Map.put(entry, :id, todo_list.next_id)
 
     new_entries =
@@ -19,7 +19,7 @@ defmodule TodoSupervised.List do
         entry
       )
 
-    %TodoSupervised.List{
+    %Todo.List{
       todo_list
       | entries: new_entries,
         next_id: todo_list.next_id + 1

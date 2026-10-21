@@ -1,6 +1,6 @@
-defmodule TodoSupervised.Cache do
+defmodule Todo.Cache do
   def start_link() do
-    IO.puts("Starting TodoSupervised.Cache.")
+    IO.puts("Starting Todo.Cache.")
 
     DynamicSupervisor.start_link(
       name: __MODULE__,
@@ -26,7 +26,7 @@ defmodule TodoSupervised.Cache do
   defp start_child(todo_list_name) do
     DynamicSupervisor.start_child(
       __MODULE__,
-      {TodoSupervised.Server, todo_list_name}
+      {Todo.Server, todo_list_name}
     )
   end
 end

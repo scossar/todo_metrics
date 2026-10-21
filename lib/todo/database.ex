@@ -1,4 +1,4 @@
-defmodule TodoSupervised.Database do
+defmodule Todo.Database do
   @pool_size 3
   @db_folder "./persist"
 
@@ -10,7 +10,7 @@ defmodule TodoSupervised.Database do
   end
 
   defp worker_spec(worker_id) do
-    default_worker_spec = {TodoSupervised.DatabaseWorker, {@db_folder, worker_id}}
+    default_worker_spec = {Todo.DatabaseWorker, {@db_folder, worker_id}}
     Supervisor.child_spec(default_worker_spec, id: worker_id)
   end
 
@@ -28,13 +28,13 @@ defmodule TodoSupervised.Database do
   def store(key, data) do
     key
     |> choose_worker()
-    |> TodoSupervised.DatabaseWorker.store(key, data)
+    |> Todo.DatabaseWorker.store(key, data)
   end
 
   def get(key) do
     key
     |> choose_worker()
-    |> TodoSupervised.DatabaseWorker.get(key)
+    |> Todo.DatabaseWorker.get(key)
   end
 
   defp choose_worker(key) do

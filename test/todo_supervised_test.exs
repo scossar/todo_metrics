@@ -1,8 +1,4 @@
-defmodule TodoSupervisedTest do
+defmodule TodoTest do
   use ExUnit.Case
-  doctest TodoSupervised
-
-  test "greets the world" do
-    assert TodoSupervised.hello() == :world
-  end
+  doctest Todo
 end

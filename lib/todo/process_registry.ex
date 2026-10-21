@@ -1,4 +1,4 @@
-defmodule TodoSupervised.ProcessRegistry do
+defmodule Todo.ProcessRegistry do
   def start_link do
     Registry.start_link(keys: :unique, name: __MODULE__)
   end

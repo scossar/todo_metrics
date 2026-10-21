@@ -1,4 +1,4 @@
-defmodule TodoSupervised.Server do
+defmodule Todo.Server do
   # A temporary worker isn't restarted on termination. Having the processes under
   # a supervision tree makes it possible to terminate the entire supervision subtree
   # without leaving dangling subprocesses though.
@@ -13,7 +13,7 @@ defmodule TodoSupervised.Server do
   defp via_tuple(name) do
     # Using `{__MODULE__, name}` as the name avoids possible naming
     # conflicts between todo server keys and database worker keys.
-    TodoSupervised.ProcessRegistry.via_tuple({__MODULE__, name})
+    Todo.ProcessRegistry.via_tuple({__MODULE__, name})
   end
 
   def add_entry(todo_server, new_entry) do
@@ -26,20 +26,20 @@ defmodule TodoSupervised.Server do
 
   @impl GenServer
   def init(name) do
-    IO.puts("Starting TodoSupervised.Server for #{name}.")
+    IO.puts("Starting Todo.Server for #{name}.")
     {:ok, {name, nil}, {:continue, :init}}
   end
 
   @impl GenServer
   def handle_continue(:init, {name, nil}) do
-    todo_list = TodoSupervised.Database.get(name) || TodoSupervised.List.new()
+    todo_list = Todo.Database.get(name) || Todo.List.new()
     {:noreply, {name, todo_list}}
   end
 
   @impl GenServer
   def handle_cast({:add_entry, new_entry}, {name, todo_list}) do
-    new_list = TodoSupervised.List.add_entry(todo_list, new_entry)
-    TodoSupervised.Database.store(name, new_list)
+    new_list = Todo.List.add_entry(todo_list, new_entry)
+    Todo.Database.store(name, new_list)
     {:noreply, {name, new_list}}
   end
 
@@ -47,7 +47,7 @@ defmodule TodoSupervised.Server do
   def handle_call({:entries, date}, _, {name, todo_list}) do
     {
       :reply,
-      TodoSupervised.List.entries(todo_list, date),
+      Todo.List.entries(todo_list, date),
       {name, todo_list}
     }
   end

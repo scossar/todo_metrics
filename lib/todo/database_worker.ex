@@ -1,4 +1,4 @@
-defmodule TodoSupervised.DatabaseWorker do
+defmodule Todo.DatabaseWorker do
   use GenServer
 
   def start_link({db_folder, worker_id}) do
@@ -18,12 +18,12 @@ defmodule TodoSupervised.DatabaseWorker do
   end
 
   defp via_tuple(worker_id) do
-    TodoSupervised.ProcessRegistry.via_tuple({__MODULE__, worker_id})
+    Todo.ProcessRegistry.via_tuple({__MODULE__, worker_id})
   end
 
   @impl GenServer
   def init(db_folder) do
-    IO.puts("Starting TodoSupervised.DatabaseWorker for folder #{db_folder}.")
+    IO.puts("Starting Todo.DatabaseWorker for folder #{db_folder}.")
     {:ok, db_folder}
   end
 
