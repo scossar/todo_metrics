@@ -1,8 +1,19 @@
 defmodule TodoSupervised.Server do
-  use GenServer
+  # A temporary worker isn't restarted on termination. Having the processes under
+  # a supervision tree makes it possible to terminate the entire supervision subtree
+  # without leaving dangling subprocesses though.
+  use GenServer, restart: :temporary
 
   def start_link(name) do
-    GenServer.start_link(__MODULE__, name)
+    # Use the `via_tuple` name to register the processes with the
+    # ProcessRegistry.
+    GenServer.start_link(__MODULE__, name, name: via_tuple(name))
+  end
+
+  defp via_tuple(name) do
+    # Using `{__MODULE__, name}` as the name avoids possible naming
+    # conflicts between todo server keys and database worker keys.
+    TodoSupervised.ProcessRegistry.via_tuple({__MODULE__, name})
   end
 
   def add_entry(todo_server, new_entry) do
